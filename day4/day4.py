@@ -53,10 +53,8 @@ def partOneAndTwo():
         if lines[i].strip() == "":
             boards.append(Board(lines[i+1:i+6]))
 
-    least_draws = len(input)
-    most_draws = 0
-    best_board = None
-    worst_board = None
+    least_draws,most_draws = len(input), 0
+    best_board,worst_board = None, None
     for board in boards:
         cur_minimum = board.search_input(input)
         if cur_minimum < least_draws:
