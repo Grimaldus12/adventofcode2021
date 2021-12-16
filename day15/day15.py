@@ -1,6 +1,6 @@
 import sys
 
-def dijkstra(grid):
+def traversal(grid):
     costs = {(0, 0): 0}
     limit = len(grid)
     points = [[0, 0]]
@@ -20,7 +20,7 @@ def dijkstra(grid):
 def partOne():
     with open(sys.argv[1]) as f:
         grid = [[int(n) for n in line.strip()] for line in f if line.strip()]
-    return dijkstra(grid)
+    return traversal(grid)
 
 def partTwo():
     with open(sys.argv[1]) as f:
@@ -33,7 +33,7 @@ def partTwo():
             new_value = grid[i % limit][j % limit] + int(j / limit) + int(i/limit)
             if new_value > 9: new_value -= 9
             new_grid[i].append(new_value)
-    return dijkstra(new_grid)
+    return traversal(new_grid)
 
 
 
