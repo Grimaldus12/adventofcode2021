@@ -2,12 +2,7 @@ import math
 import sys
 
 
-operations = {
-    0:sum, 1:math.prod,2:min,3:max,
-    5:lambda comp_packs: 1 if comp_packs[0] > comp_packs[1] else 0,
-    6:lambda comp_packs: 1 if comp_packs[0] < comp_packs[1] else 0,
-    7:lambda comp_packs: 1 if comp_packs[0] == comp_packs[1] else 0
-}
+
 
 class Packet:
     def __init__(self, type_id, packet_version):
@@ -15,6 +10,12 @@ class Packet:
         self.packet_version = packet_version
         self.value = 0
         self.children = []
+        self.operations = {
+            0:sum, 1:math.prod,2:min,3:max,
+            5:lambda comp_packs: 1 if comp_packs[0] > comp_packs[1] else 0,
+            6:lambda comp_packs: 1 if comp_packs[0] < comp_packs[1] else 0,
+            7:lambda comp_packs: 1 if comp_packs[0] == comp_packs[1] else 0
+}
 
     def print(self, root=False):
         if not root: print("Packet Version: %d" %self.packet_version)
@@ -30,7 +31,7 @@ class Packet:
     def evaluate_packet(self):
         if self.type_id == 4:
             return self.value
-        return operations[self.type_id]([child.evaluate_packet() for child in self.children])
+        return self.operations[self.type_id]([child.evaluate_packet() for child in self.children])
 
 def scanPack(binary_str, root, pointer = 0):
     packet_version = int(binary_str[pointer:pointer + 3], 2)
