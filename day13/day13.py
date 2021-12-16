@@ -41,7 +41,7 @@ def solution(only_one_fold):
         if only_one_fold: return dots
 
     with open("output.txt", 'w') as file:
-        array_as_string = '\n'.join('\t'.join('%d' %x for x in y) for y in last_grid.astype(int)).replace("0", ".")
+        array_as_string = '\n'.join(' '.join('%d' %x for x in y) for y in last_grid.astype(int)).replace("0", ".")
         file.write(array_as_string)
     return 0
 
