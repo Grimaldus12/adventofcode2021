@@ -75,21 +75,6 @@ def solution(partOne):
     else: return root.evaluate_packet()
 
 
-def partTwo():
-    with open(sys.argv[1]) as f:
-        grid = [[int(n) for n in line.strip()] for line in f if line.strip()]
-    limit = len(grid)
-    new_grid = []
-    for i in range(5*limit):
-        new_grid.append([])
-        for j in range(5*limit):
-            new_value = grid[i % limit][j % limit] + int(j / limit) + int(i/limit)
-            if new_value > 9: new_value -= 9
-            new_grid[i].append(new_value)
-    return 0
-
-
-
 if __name__ == "__main__":
     print("Solution part one: %d" % solution(True))
     print("Solution part two: %d" % solution(False))
