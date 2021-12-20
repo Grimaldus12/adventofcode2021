@@ -8,9 +8,10 @@ class Image:
 
     def __init__(self, image, steps, enhancement_string):
         image_width = len(image[0])-1
-        self.pixel_width = image_width# + 2*padding
-        self.pixel_height = len(image)# + 2*padding
+        self.pixel_width = image_width
+        self.pixel_height = len(image)
         self.enhancement_string = enhancement_string
+        self.mapping = {'#':1, '.':0}
         self.pixels = np.zeros((self.pixel_height, self.pixel_width),dtype=int)
         for i in range(len(image)):
             for j in range(image_width):
@@ -28,14 +29,16 @@ class Image:
                 new_grid = np.ones((self.pixel_height, self.pixel_width), dtype=int)
         for i in range(1,self.pixels.shape[0]-1):
             for j in range(1,self.pixels.shape[1]-1):
-                nine_bit = self.find_neighbors(i,j,step)
-                new_grid[i,j] = 0 if self.enhancement_string[int(nine_bit,2)] == "." else 1
-        self.pixels = new_grid.copy()
+                nine_bit = self.find_neighbors(i,j)
+                new_grid[i,j] = self.mapping[self.enhancement_string[int(nine_bit,2)]]
+        self.pixels = new_grid
         return np.sum(self.pixels)
 
 
     def find_neighbors(self, i, j):
-        bit_string = np.concatenate((self.pixels[i - 1, j - 1:j + 2],self.pixels[i, j - 1:j + 2],self.pixels[i + 1, j - 1:j + 2]))
+        bit_string = self.pixels[i - 1, j - 1:j + 2].tolist()
+        bit_string.extend(self.pixels[i, j - 1:j + 2].tolist())
+        bit_string.extend(self.pixels[i + 1, j - 1:j + 2].tolist())
         return ''.join([str(num) for num in bit_string])
 
     def pad_pixels(self, steps):
@@ -43,7 +46,7 @@ class Image:
         padded_matrix[steps:self.pixels.shape[0]+steps,steps:self.pixels.shape[1]+steps] = self.pixels
         self.pixel_height = padded_matrix.shape[0]
         self.pixel_width = padded_matrix.shape[1]
-        self.pixels = padded_matrix.copy()
+        self.pixels = padded_matrix
 
 
 def solution(steps):
