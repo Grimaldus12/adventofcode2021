@@ -16,17 +16,22 @@ class Image:
         for i in range(len(image)):
             for j in range(image_width):
                 self.pixels[i, j] = 1 if image[i][j] == "#" else 0
-        self.pad_pixels(steps+1)
-
+        self.pad_pixels(False)
+        #print(self.pixels)
 
 
     def enhance(self, step):
         new_grid = []
         if self.enhancement_string[0] == '#':
             if step % 2 == 1:
+                self.pad_pixels(True)
                 new_grid = np.zeros((self.pixel_height, self.pixel_width),dtype=int)
             else:
+                self.pad_pixels(False)
                 new_grid = np.ones((self.pixel_height, self.pixel_width), dtype=int)
+        else:
+            self.pad_pixels(False)
+            new_grid = np.zeros((self.pixel_height, self.pixel_width),dtype=int)
         for i in range(1,self.pixels.shape[0]-1):
             for j in range(1,self.pixels.shape[1]-1):
                 nine_bit = self.find_neighbors(i,j)
@@ -41,12 +46,10 @@ class Image:
         bit_string.extend(self.pixels[i + 1, j - 1:j + 2].tolist())
         return ''.join([str(num) for num in bit_string])
 
-    def pad_pixels(self, steps):
-        padded_matrix = np.zeros((self.pixels.shape[0]+(2*steps), self.pixels.shape[1]+(2*steps)), dtype=int)
-        padded_matrix[steps:self.pixels.shape[0]+steps,steps:self.pixels.shape[1]+steps] = self.pixels
-        self.pixel_height = padded_matrix.shape[0]
-        self.pixel_width = padded_matrix.shape[1]
-        self.pixels = padded_matrix
+    def pad_pixels(self, ones):
+        self.pixels = np.pad(self.pixels,((1,1),(1,1)), constant_values=0) if not ones else np.pad(self.pixels,((1,1),(1,1)), constant_values=1)
+        self.pixel_height =self.pixels.shape[0]
+        self.pixel_width = self.pixels.shape[1]
 
 
 def solution(steps):
