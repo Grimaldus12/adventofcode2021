@@ -2,7 +2,11 @@ import sys
 from collections import Counter
 from itertools import product
 
-split_freq = Counter(s1+s2+s3 for (s1,s2,s3) in product([1,2,3],repeat=3))
+#split_freq = Counter(s1+s2+s3 for (s1,s2,s3) in product([1,2,3],repeat=3))
+import itertools
+new_throws = list(itertools.product([1,2,3], repeat=3))
+sum_throws = [sum(_) for _ in new_throws]
+split_freq = {_:sum_throws.count(_) for _ in set(sum_throws)}
 
 def play_dirac_game(last_pos_p1, last_pos_p2, last_s_p1, last_s_p2, t):
     counter = 0
@@ -20,6 +24,8 @@ def play_dirac_game(last_pos_p1, last_pos_p2, last_s_p1, last_s_p2, t):
             s_p2 += 10 if pos_p2 == 0 else pos_p2
             if s_p2 < 21: counter += split_freq[dirac_roll] * play_dirac_game(pos_p1, pos_p2, s_p1, s_p2,0)
     return counter
+
+
 
 
 def partTwo():
